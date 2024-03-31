@@ -6,9 +6,9 @@ export default class Snake {
      * @type {Array<SnakeLink>}
      */
     body = [];
-
     ate = false;
     isAlive = true;
+    direction = "right";
 
     /**
      * @param {number} x
@@ -49,12 +49,11 @@ export default class Snake {
     }
 
     /**
-     * @param {string} direction
      * @param {Coordinate} food
      */
-    move(direction, food) {
+    move(food) {
         // calculate next move
-        let nextMove = this.calcNextMove(direction);
+        let nextMove = this.calcNextMove(this.direction);
 
         // check if ate food and add new link to snake
         if (food.x === nextMove.x && food.y === nextMove.y) {
