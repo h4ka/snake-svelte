@@ -6,21 +6,20 @@
     let board = new Board(20, 20);
     let snake = new Snake(10, 10);
 
-    let direction = "left";
     let timer;
 
     /**
      * @param {{ key: string; }} event
      */
     function onKeyDown(event) {
-        if (event.key === "ArrowLeft" && direction !== "right") {
-            direction = "left";
-        } else if (event.key === "ArrowRight" && direction !== "left") {
-            direction = "right";
-        } else if (event.key === "ArrowUp" && direction !== "down") {
-            direction = "up";
-        } else if (event.key === "ArrowDown" && direction !== "up") {
-            direction = "down";
+        if (event.key === "ArrowLeft" && snake.direction !== "right") {
+            snake.direction = "left";
+        } else if (event.key === "ArrowRight" && snake.direction !== "left") {
+            snake.direction = "right";
+        } else if (event.key === "ArrowUp" && snake.direction !== "down") {
+            snake.direction = "up";
+        } else if (event.key === "ArrowDown" && snake.direction !== "up") {
+            snake.direction = "down";
         }
     }
 
@@ -29,7 +28,7 @@
     }
 
     function runGame() {
-        snake.move(direction, board.foodPos);
+        snake.move(board.foodPos);
 
         if (snake.ate) {
             speedUp();
@@ -120,7 +119,7 @@
     .cell {
         height: 20px;
         width: 20px;
-        background-color: rgb(167, 171, 171);
+        background-color: #a7abab;
         margin: 0;
         padding: 0;
     }
@@ -137,18 +136,20 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        color: white;
+        color: #22ff00;
     }
 
     .restart-button {
         cursor: pointer;
-        color: white;
+        color: #22ff00;
         border-radius: 25px;
-        /* padding: 5px; */
+        padding: 5px;
         margin-top: 10px;
         text-align: center;
+        font-weight: 400;
+        background-color: rgb(92, 92, 92);
 
         font-size: 20px;
-        border: 1px solid white;
+        border: 1px solid #22ff00;
     }
 </style>
