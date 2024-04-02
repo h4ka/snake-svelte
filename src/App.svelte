@@ -19,12 +19,8 @@
      * @param {{ key: string; }} event
      */
     function onKeyDown(event) {
-        if (!isGameRunning) {
-            isGameRunning = true;
-            timer = setInterval(function () {
-                runGame();
-            }, 300);
-        }
+        startGame();
+
         if (event.key === "ArrowLeft") {
             snake.nextDirection = "left";
         } else if (event.key === "ArrowRight") {
@@ -33,6 +29,29 @@
             snake.nextDirection = "up";
         } else if (event.key === "ArrowDown") {
             snake.nextDirection = "down";
+        } else if (event.key === "Escape") {
+            terminateGame();
+            location.reload();
+        }
+    }
+
+    /**
+     * @param {string} direction
+     */
+    function turn(direction) {
+        startGame();
+        snake.nextDirection = direction;
+    }
+
+    function startGame() {
+        if (!isGameRunning) {
+            isGameRunning = true;
+            timer = setInterval(
+                function () {
+                    runGame();
+                },
+                Math.max(50, 300 * ((100 - snake.body.length) / 100))
+            );
         }
     }
 
@@ -85,14 +104,6 @@
 
 <main>
     <h1>🐍 Lange Schlange 🐍</h1>
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    {#if !snake.isAlive}
-        <div class="game-over">
-            <h1>GAME OVER</h1>
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class="restart-button" on:click={() => location.reload()}>restart</div>
-        </div>
-    {/if}
     <div class="board">
         {#each board.grid as row}
             <div class="row">
@@ -112,6 +123,23 @@
             </div>
         {/each}
     </div>
+    <div class="container">
+        {#if !snake.isAlive}
+            <div class="game-over">
+                <div class="restart-button" on:click={() => location.reload()}>restart</div>
+            </div>
+        {:else}
+            <div class="controls">
+                <div on:click={() => turn("left")} class="left arrow">⬅️</div>
+                <div class="updown">
+                    <div on:click={() => turn("up")} class="up arrow">⬆️</div>
+                    <div>🐍</div>
+                    <div on:click={() => turn("down")} class="down arrow">⬇️</div>
+                </div>
+                <div on:click={() => turn("right")} class="right arrow">➡️</div>
+            </div>
+        {/if}
+    </div>
 </main>
 <svelte:window on:keydown|preventDefault={onKeyDown} />
 <audio src="src/assets/sounds/eat.mp3" bind:this={eatSound}></audio>
@@ -120,7 +148,11 @@
 <style>
     h1 {
         color: #22ff00;
+        font-size: min(calc(100vw / 10), 40px);
+        line-height: 1.2;
+        margin-bottom: 1em;
     }
+
     .board {
         display: flex;
         flex-direction: column;
@@ -153,25 +185,52 @@
         border: #19bb00 1px solid;
     }
 
-    .game-over {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+    .container {
+        display: flex;
+        flex-direction: column;
+        margin-top: 3em;
+    }
+
+    .controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 5em;
+        font-size: min(calc(100vw / 10), 40px);
+    }
+
+    .arrow {
         color: #22ff00;
+        width: 50px;
+        height: 50px;
+        margin: 10px;
+    }
+
+    .updown {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .game-over {
+        color: #22ff00;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .restart-button {
         cursor: pointer;
         color: #22ff00;
-        border-radius: 25px;
-        padding: 5px;
-        margin-top: 10px;
-        text-align: center;
+        border-radius: 100%;
+        width: 5em;
+        height: 5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         font-weight: 400;
-        background-color: rgb(92, 92, 92);
-
-        font-size: 20px;
-        border: 1px solid #22ff00;
+        font-size: min(calc(100vw / 10), 40px);
+        border: 2px solid #22ff00;
     }
 </style>
