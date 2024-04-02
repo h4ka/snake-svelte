@@ -7,6 +7,8 @@
     let snake = new Snake(10, 10);
 
     let timer;
+    let eatAudio;
+    let deadSound;
 
     /**
      * @param {{ key: string; }} event
@@ -31,6 +33,7 @@
         snake.move(board.foodPos);
 
         if (!snake.isAlive) {
+            deadSound.play();
             snake = snake;
             terminateGame();
         } else {
@@ -41,6 +44,7 @@
     }
 
     function speedUp() {
+        eatAudio.play();
         clearInterval(timer);
         board.redraw(snake);
         board = board;
@@ -96,6 +100,8 @@
     </div>
 </main>
 <svelte:window on:keydown|preventDefault={onKeyDown} />
+<audio src="src/assets/sounds/eat.mp3" bind:this={eatAudio}></audio>
+<audio src="src/assets/sounds/dead.mp3" bind:this={deadSound}></audio>
 
 <style>
     h1 {
