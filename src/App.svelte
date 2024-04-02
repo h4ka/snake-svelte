@@ -40,17 +40,6 @@
         }
     }
 
-    onMount(async () => {
-        board.generateFood();
-        timer = setInterval(function () {
-            runGame();
-        }, 300);
-    });
-
-    onDestroy(() => {
-        clearInterval(timer);
-    });
-
     function speedUp() {
         clearInterval(timer);
         board.redraw(snake);
@@ -63,6 +52,17 @@
             300 * ((100 - snake.body.length) / 100)
         );
     }
+
+    onMount(async () => {
+        board.generateFood();
+        timer = setInterval(function () {
+            runGame();
+        }, 300);
+    });
+
+    onDestroy(() => {
+        terminateGame();
+    });
 </script>
 
 <main>
@@ -124,8 +124,13 @@
     .snake {
         height: 100%;
         width: 100%;
-        background-color: green;
+        background-color: #007500;
         border-radius: 100%;
+        font-size: small;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: #19bb00 1px solid;
     }
 
     .game-over {
