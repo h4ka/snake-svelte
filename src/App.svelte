@@ -30,16 +30,13 @@
     function runGame() {
         snake.move(board.foodPos);
 
-        if (snake.ate) {
-            speedUp();
-        }
-
-        board.redraw(snake);
-        board = board;
-
         if (!snake.isAlive) {
             snake = snake;
             terminateGame();
+        } else {
+            if (snake.ate) speedUp();
+            board.redraw(snake);
+            board = board;
         }
     }
 
@@ -83,12 +80,12 @@
             <div class="row">
                 {#each row as cell}
                     <div class="cell">
-                        {#if !snake.isAlive && cell === "snake-head"}
+                        {#if !snake.isAlive && (cell === "snake-head" || cell === "snake-body")}
                             <div class="snake">💀</div>
                         {:else if cell === "snake-head"}
                             <div class="snake">👀</div>
                         {:else if cell === "snake-body"}
-                            <div class="snake"></div>
+                            <div class="snake">🟢</div>
                         {:else if cell === "food"}
                             <div class="food">🍎</div>
                         {/if}
@@ -128,7 +125,7 @@
         height: 100%;
         width: 100%;
         background-color: green;
-        border-radius: 5px;
+        border-radius: 100%;
     }
 
     .game-over {

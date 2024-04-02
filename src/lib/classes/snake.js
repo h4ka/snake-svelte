@@ -39,11 +39,8 @@ export default class Snake {
                 break;
         }
 
-        // check and adjust if next move is out of bounds
-        if (nextMove.x < 0) nextMove.x = 19;
-        if (nextMove.x > 19) nextMove.x = 0;
-        if (nextMove.y < 0) nextMove.y = 19;
-        if (nextMove.y > 19) nextMove.y = 0;
+        // check if next move is out of bounds and set isAlive to false
+        if (nextMove.x < 0 || nextMove.x > 19 || nextMove.y < 0 || nextMove.y > 19) this.isAlive = false;
 
         return nextMove;
     }
