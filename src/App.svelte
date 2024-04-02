@@ -2,18 +2,29 @@
     import { onDestroy, onMount } from "svelte";
     import Snake from "./lib/classes/snake";
     import Board from "./lib/classes/board";
+    import Coordinate from "./lib/classes/coordinate";
 
-    let board = new Board(20, 20);
-    let snake = new Snake(10, 10);
+    const BOARD_SIZE = { x: 20, y: 20 };
+    const SNAKE_INITIAL_POSITION = new Coordinate(10, 10);
+
+    let board = new Board(BOARD_SIZE);
+    let snake = new Snake(SNAKE_INITIAL_POSITION, BOARD_SIZE);
 
     let timer;
-    let eatAudio;
+    let eatSound;
     let deadSound;
+    let isGameRunning = false;
 
     /**
      * @param {{ key: string; }} event
      */
     function onKeyDown(event) {
+        if (!isGameRunning) {
+            isGameRunning = true;
+            timer = setInterval(function () {
+                runGame();
+            }, 300);
+        }
         if (event.key === "ArrowLeft") {
             snake.nextDirection = "left";
         } else if (event.key === "ArrowRight") {
@@ -29,6 +40,11 @@
         clearInterval(timer);
     }
 
+    function redrawBoard() {
+        board.redraw(snake);
+        board = board;
+    }
+
     function runGame() {
         snake.move(board.foodPos);
 
@@ -36,32 +52,30 @@
             deadSound.play();
             snake = snake;
             terminateGame();
+        } else if (snake.ate) {
+            eatSound.play();
+            snake.ate = false;
+            board.generateFood();
+            redrawBoard();
+            speedUp();
         } else {
-            if (snake.ate) speedUp();
-            board.redraw(snake);
-            board = board;
+            redrawBoard();
         }
     }
 
     function speedUp() {
-        eatAudio.play();
         clearInterval(timer);
-        board.redraw(snake);
-        board = board;
-
         timer = setInterval(
             function () {
                 runGame();
             },
-            300 * ((100 - snake.body.length) / 100)
+            Math.max(50, 300 * ((100 - snake.body.length) / 100))
         );
     }
 
     onMount(async () => {
         board.generateFood();
-        timer = setInterval(function () {
-            runGame();
-        }, 300);
+        redrawBoard();
     });
 
     onDestroy(() => {
@@ -70,7 +84,7 @@
 </script>
 
 <main>
-    <h1>Lange Schlange 🐍</h1>
+    <h1>🐍 Lange Schlange 🐍</h1>
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     {#if !snake.isAlive}
         <div class="game-over">
@@ -100,7 +114,7 @@
     </div>
 </main>
 <svelte:window on:keydown|preventDefault={onKeyDown} />
-<audio src="src/assets/sounds/eat.mp3" bind:this={eatAudio}></audio>
+<audio src="src/assets/sounds/eat.mp3" bind:this={eatSound}></audio>
 <audio src="src/assets/sounds/dead.mp3" bind:this={deadSound}></audio>
 
 <style>

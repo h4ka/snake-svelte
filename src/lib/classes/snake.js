@@ -8,15 +8,16 @@ export default class Snake {
     body = [];
     ate = false;
     isAlive = true;
-    direction = "right";
-    nextDirection = "right";
+    direction = "";
+    nextDirection = "";
 
     /**
-     * @param {number} x
-     * @param {number} y
+     * @param {{x: number, y: number}} [boardSize]
+     * @param {Coordinate} [initialPosition]
      */
-    constructor(x, y) {
-        this.body.push(new SnakeLink(x, y));
+    constructor(initialPosition, boardSize) {
+        this.body.push(new SnakeLink(initialPosition.x, initialPosition.y));
+        this.boardSize = boardSize;
     }
 
     calcNextMove() {
@@ -53,7 +54,9 @@ export default class Snake {
         }
 
         // check if next move is out of bounds and set isAlive to false
-        if (nextMove.x < 0 || nextMove.x > 19 || nextMove.y < 0 || nextMove.y > 19) this.isAlive = false;
+        if (nextMove.x < 0 || nextMove.x === this.boardSize.x || nextMove.y < 0 || nextMove.y === this.boardSize.y) {
+            this.isAlive = false;
+        }
 
         return nextMove;
     }
@@ -74,11 +77,10 @@ export default class Snake {
         // move snake body and check if snake is dead
         let prev = new Coordinate(this.body[0].pos.x, this.body[0].pos.y);
         let curr;
+
         for (let i = 1; i < this.body.length; i++) {
             curr = new Coordinate(this.body[i].pos.x, this.body[i].pos.y);
-
             this.body[i].pos = prev;
-
             if (nextMove.x === this.body[i].pos.x && nextMove.y === this.body[i].pos.y) {
                 this.isAlive = false;
             }

@@ -13,10 +13,9 @@ export default class Board {
     foodPos;
 
     /**
-     * @param {number} x
-     * @param {number} y
+     * @param { { x: number, y: number } } size
      */
-    constructor(x, y) {
+    constructor({ x, y }) {
         this.x = x;
         this.y = y;
         this.grid = Array.from(Array(x), () => new Array(y));
@@ -38,18 +37,10 @@ export default class Board {
      */
     redraw(snake) {
         this.grid = Array.from(Array(this.x), () => new Array(this.y));
-
         for (let i = 1; i < snake.body.length; i++) {
             this.grid[snake.body[i].pos.y][snake.body[i].pos.x] = "snake-body";
         }
-
         this.grid[snake.body[0].pos.y][snake.body[0].pos.x] = "snake-head";
-
-        if (snake.ate) {
-            snake.ate = false;
-            this.generateFood();
-        }
-
         this.grid[this.foodPos.y][this.foodPos.x] = "food";
     }
 }
