@@ -14,14 +14,14 @@
      * @param {{ key: string; }} event
      */
     function onKeyDown(event) {
-        if (event.key === "ArrowLeft" && snake.direction !== "right") {
-            snake.direction = "left";
-        } else if (event.key === "ArrowRight" && snake.direction !== "left") {
-            snake.direction = "right";
-        } else if (event.key === "ArrowUp" && snake.direction !== "down") {
-            snake.direction = "up";
-        } else if (event.key === "ArrowDown" && snake.direction !== "up") {
-            snake.direction = "down";
+        if (event.key === "ArrowLeft") {
+            snake.nextDirection = "left";
+        } else if (event.key === "ArrowRight") {
+            snake.nextDirection = "right";
+        } else if (event.key === "ArrowUp") {
+            snake.nextDirection = "up";
+        } else if (event.key === "ArrowDown") {
+            snake.nextDirection = "down";
         }
     }
 

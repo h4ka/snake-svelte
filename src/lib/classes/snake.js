@@ -9,6 +9,7 @@ export default class Snake {
     ate = false;
     isAlive = true;
     direction = "right";
+    nextDirection = "right";
 
     /**
      * @param {number} x
@@ -18,13 +19,25 @@ export default class Snake {
         this.body.push(new SnakeLink(x, y));
     }
 
-    /**
-     * @param {string} direction
-     */
-    calcNextMove(direction) {
+    calcNextMove() {
         let nextMove = new Coordinate(this.body[0].pos.x, this.body[0].pos.y);
 
-        switch (direction) {
+        switch (this.nextDirection) {
+            case "left":
+                if (this.direction !== "right") this.direction = "left";
+                break;
+            case "right":
+                if (this.direction !== "left") this.direction = "right";
+                break;
+            case "up":
+                if (this.direction !== "down") this.direction = "up";
+                break;
+            case "down":
+                if (this.direction !== "up") this.direction = "down";
+                break;
+        }
+
+        switch (this.direction) {
             case "left":
                 nextMove.x -= 1;
                 break;
@@ -50,7 +63,7 @@ export default class Snake {
      */
     move(food) {
         // calculate next move
-        let nextMove = this.calcNextMove(this.direction);
+        let nextMove = this.calcNextMove();
 
         // check if ate food and add new link to snake
         if (food.x === nextMove.x && food.y === nextMove.y) {
