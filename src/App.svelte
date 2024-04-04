@@ -6,6 +6,10 @@
 
     const BOARD_SIZE = 20;
     const SNAKE_INITIAL_POSITION = new Coordinate(Math.round(BOARD_SIZE / 2), Math.round(BOARD_SIZE / 2));
+    const SNAKE_INITIAL_SPEED = 300;
+    const SNAKE_MAX_SPEED = 50;
+
+    $: CURRENT_SPEED = Math.max(SNAKE_MAX_SPEED, SNAKE_INITIAL_SPEED * ((100 - snake.body.length) / 100));
 
     let board = new Board(BOARD_SIZE);
     let snake = new Snake(SNAKE_INITIAL_POSITION, BOARD_SIZE);
@@ -38,12 +42,9 @@
     function startGame() {
         if (!isGameRunning) {
             isGameRunning = true;
-            timer = setInterval(
-                function () {
-                    runGame();
-                },
-                Math.max(50, 300 * ((100 - snake.body.length) / 100))
-            );
+            timer = setInterval(function () {
+                runGame();
+            }, CURRENT_SPEED);
         }
     }
 
@@ -76,12 +77,9 @@
 
     function speedUp() {
         clearInterval(timer);
-        timer = setInterval(
-            function () {
-                runGame();
-            },
-            Math.max(50, 300 * ((100 - snake.body.length) / 100))
-        );
+        timer = setInterval(function () {
+            runGame();
+        }, CURRENT_SPEED);
     }
 
     onMount(async () => {
@@ -98,7 +96,7 @@
 
 <main>
     <h1>Lange Schlange</h1>
-    <div class="board" style="--rows: {BOARD_SIZE}; --cols: {BOARD_SIZE};">
+    <div class="board" style="--board-size: {BOARD_SIZE};">
         {#each board.grid as row}
             {#each row as cell}
                 <div class="cell">
@@ -124,8 +122,8 @@
 <style>
     .board {
         display: grid;
-        grid-template-columns: repeat(var(--cols), 1fr);
-        grid-template-rows: repeat(var(--rows), 1fr);
+        grid-template-columns: repeat(var(--board-size), 1fr);
+        grid-template-rows: repeat(var(--board-size), 1fr);
         grid-gap: 1px;
         width: min(80vmin, 800px);
         height: min(80vmin, 800px);
@@ -138,7 +136,7 @@
     }
 
     .item {
-        font-size: min(2vmin, 24px);
+        font-size: calc(30vmin / var(--board-size));
         height: 100%;
         width: 100%;
         align-content: center;
