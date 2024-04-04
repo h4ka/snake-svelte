@@ -12,7 +12,7 @@ export default class Snake {
     nextDirection = "";
 
     /**
-     * @param {{x: number, y: number}} [boardSize]
+     * @param {number} [boardSize]
      * @param {Coordinate} [initialPosition]
      */
     constructor(initialPosition, boardSize) {
@@ -54,7 +54,7 @@ export default class Snake {
         }
 
         // check if next move is out of bounds and set isAlive to false
-        if (nextMove.x < 0 || nextMove.x === this.boardSize.x || nextMove.y < 0 || nextMove.y === this.boardSize.y) {
+        if (nextMove.x < 0 || nextMove.x === this.boardSize || nextMove.y < 0 || nextMove.y === this.boardSize) {
             this.isAlive = false;
         }
 

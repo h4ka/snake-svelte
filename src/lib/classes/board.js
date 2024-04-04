@@ -13,12 +13,12 @@ export default class Board {
     foodPos;
 
     /**
-     * @param { { x: number, y: number } } size
+     * @param { number } size
      */
-    constructor({ x, y }) {
-        this.x = x;
-        this.y = y;
-        this.grid = Array.from(Array(x), () => new Array(y));
+    constructor(size) {
+        this.x = size;
+        this.y = size;
+        this.grid = Array.from(Array(size), () => new Array(size));
     }
 
     generateFood() {

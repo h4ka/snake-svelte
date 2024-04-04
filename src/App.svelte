@@ -4,8 +4,8 @@
     import Board from "./lib/classes/board";
     import Coordinate from "./lib/classes/coordinate";
 
-    const BOARD_SIZE = { x: 20, y: 20 };
-    const SNAKE_INITIAL_POSITION = new Coordinate(10, 10);
+    const BOARD_SIZE = 20;
+    const SNAKE_INITIAL_POSITION = new Coordinate(Math.round(BOARD_SIZE / 2), Math.round(BOARD_SIZE / 2));
 
     let board = new Board(BOARD_SIZE);
     let snake = new Snake(SNAKE_INITIAL_POSITION, BOARD_SIZE);
@@ -33,14 +33,6 @@
             terminateGame();
             location.reload();
         }
-    }
-
-    /**
-     * @param {string} direction
-     */
-    function turn(direction) {
-        startGame();
-        snake.nextDirection = direction;
     }
 
     function startGame() {
@@ -93,6 +85,8 @@
     }
 
     onMount(async () => {
+        eatSound.volume = 0.5;
+        deadSound.volume = 0.5;
         board.generateFood();
         redrawBoard();
     });
@@ -103,134 +97,62 @@
 </script>
 
 <main>
-    <h1>🐍 Lange Schlange 🐍</h1>
-    <div class="board">
+    <h1>Lange Schlange</h1>
+    <div class="board" style="--rows: {BOARD_SIZE}; --cols: {BOARD_SIZE};">
         {#each board.grid as row}
-            <div class="row">
-                {#each row as cell}
-                    <div class="cell">
-                        {#if !snake.isAlive && (cell === "snake-head" || cell === "snake-body")}
-                            <div class="snake">💀</div>
-                        {:else if cell === "snake-head"}
-                            <div class="snake">👀</div>
-                        {:else if cell === "snake-body"}
-                            <div class="snake">🟢</div>
-                        {:else if cell === "food"}
-                            <div class="food">🍎</div>
-                        {/if}
-                    </div>
-                {/each}
-            </div>
+            {#each row as cell}
+                <div class="cell">
+                    {#if !snake.isAlive && (cell === "snake-head" || cell === "snake-body")}
+                        <div class="snake item">💀</div>
+                    {:else if cell === "snake-head"}
+                        <div class="snake item">👀</div>
+                    {:else if cell === "snake-body"}
+                        <div class="snake item"></div>
+                    {:else if cell === "food"}
+                        <div class="item">🍎</div>
+                    {/if}
+                </div>
+            {/each}
         {/each}
     </div>
-    <div class="container">
-        {#if !snake.isAlive}
-            <div class="game-over">
-                <div class="restart-button" on:click={() => location.reload()}>restart</div>
-            </div>
-        {:else}
-            <div class="controls">
-                <div on:click={() => turn("left")} class="left arrow">⬅️</div>
-                <div class="updown">
-                    <div on:click={() => turn("up")} class="up arrow">⬆️</div>
-                    <div>🐍</div>
-                    <div on:click={() => turn("down")} class="down arrow">⬇️</div>
-                </div>
-                <div on:click={() => turn("right")} class="right arrow">➡️</div>
-            </div>
-        {/if}
-    </div>
+    <h1>Score: {snake.body.length}</h1>
 </main>
 <svelte:window on:keydown|preventDefault={onKeyDown} />
 <audio src="src/assets/sounds/eat.mp3" bind:this={eatSound}></audio>
 <audio src="src/assets/sounds/dead.mp3" bind:this={deadSound}></audio>
 
 <style>
-    h1 {
-        color: #22ff00;
-        font-size: min(calc(100vw / 10), 40px);
-        line-height: 1.2;
-        margin-bottom: 1em;
-    }
-
     .board {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        border: 3px solid #22ff00;
-    }
-
-    .row {
-        display: flex;
-        gap: 2px;
+        display: grid;
+        grid-template-columns: repeat(var(--cols), 1fr);
+        grid-template-rows: repeat(var(--rows), 1fr);
+        grid-gap: 1px;
+        width: min(80vmin, 800px);
+        height: min(80vmin, 800px);
+        border: 1vmin solid #00ff00;
     }
 
     .cell {
-        height: 20px;
-        width: 20px;
-        background-color: #a7abab;
-        margin: 0;
-        padding: 0;
+        padding: 1px;
+        background-color: #9d9d9d;
+    }
+
+    .item {
+        font-size: min(2vmin, 24px);
+        height: 100%;
+        width: 100%;
+        align-content: center;
     }
 
     .snake {
-        height: 100%;
-        width: 100%;
         background-color: #007500;
-        border-radius: 100%;
-        font-size: small;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: #19bb00 1px solid;
+        border-radius: 20%;
     }
 
-    .container {
-        display: flex;
-        flex-direction: column;
-        margin-top: 3em;
-    }
-
-    .controls {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 5em;
-        font-size: min(calc(100vw / 10), 40px);
-    }
-
-    .arrow {
-        color: #22ff00;
-        width: 50px;
-        height: 50px;
-        margin: 10px;
-    }
-
-    .updown {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .game-over {
-        color: #22ff00;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .restart-button {
-        cursor: pointer;
-        color: #22ff00;
-        border-radius: 100%;
-        width: 5em;
-        height: 5em;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: 400;
-        font-size: min(calc(100vw / 10), 40px);
-        border: 2px solid #22ff00;
+    h1 {
+        color: #00ff00;
+        font-size: min(8vmin, 60px);
+        padding: 20px;
+        margin: 0px;
     }
 </style>
