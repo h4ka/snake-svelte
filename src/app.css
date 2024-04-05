@@ -1,6 +1,10 @@
+@font-face {
+    font-family: "Open Sans";
+    src: url("../public/fonts/OpenSans-Light.ttf") format("truetype");
+}
+
 :root {
-    font-family: Inter, Avenir, sistem-ui, Helvetica, Arial, sans-serif;
-    font-weight: 400;
+    font-family: "Open Sans", Avenir, Helvetica, Arial, sans-serif;
 
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);

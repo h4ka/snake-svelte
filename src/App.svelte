@@ -112,15 +112,15 @@
 </script>
 
 <main>
-    <h1>LANGE SCHLANGE</h1>
+    <h1>Lange Schlange</h1>
     {#if !snake.isAlive}
-        <div id="popup" class="overlay">
+        <div class="overlay">
             <h2>GAME OVER</h2>
             <span>press ESC to restart</span>
         </div>
     {/if}
-    {#if gamePaused}
-        <div id="paused" class="overlay">
+    {#if gamePaused && snake.isAlive}
+        <div class="overlay">
             <h2>PAUSE</h2>
             <span>press SPACE to continue</span>
         </div>
@@ -134,7 +134,7 @@
             {/each}
         {/each}
     </div>
-    <h2>SCORE: {snake.body.length}</h2>
+    <h2>Score: {snake.body.length}</h2>
 </main>
 <svelte:window on:keydown|preventDefault={onKeyDown} />
 <audio src="src/assets/sounds/eat.mp3" bind:this={eatSound}></audio>
@@ -144,6 +144,7 @@
     main {
         color: #00ff00;
     }
+
     .overlay {
         position: fixed;
         top: 50%;
@@ -154,17 +155,7 @@
         place-content: center;
         z-index: 1;
         border-radius: 2vmin;
-    }
-
-    #popup {
-        background: #000000c5;
-        color: #ffffffaf;
-        border: 1vmin solid #00ff00;
-    }
-
-    #paused {
-        background: #00000074;
-        color: #ffffffaf;
+        background: #00000085;
     }
 
     .blured {
@@ -178,8 +169,6 @@
         grid-gap: 1px;
         width: min(70vmin, 500px);
         height: min(70vmin, 500px);
-        border: 1vmin solid #00ff00;
-        border-radius: 1vmin;
     }
 
     .cell {
@@ -200,7 +189,7 @@
     }
 
     .snake-body {
-        background-color: #009000;
+        background-color: #009000d7;
     }
 
     .snake-dead {
@@ -208,12 +197,17 @@
     }
 
     .food {
-        background-color: #ff0000cc;
+        background-color: #ff0000;
     }
 
     h1 {
         font-size: min(6vmin, 50px);
-        padding: 2vmax;
+        padding: 1rem;
         margin: 0px;
+    }
+
+    h2 {
+        margin: 0;
+        padding: 1rem;
     }
 </style>
