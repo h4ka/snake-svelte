@@ -9,7 +9,7 @@
     const SNAKE_INITIAL_SPEED = 300;
     const SNAKE_MAX_SPEED = 50;
 
-    $: CURRENT_SPEED = Math.max(SNAKE_MAX_SPEED, SNAKE_INITIAL_SPEED * ((100 - snake.body.length) / 100));
+    $: currentSpeed = Math.max(SNAKE_MAX_SPEED, SNAKE_INITIAL_SPEED * ((100 - snake.body.length) / 100));
 
     let board = new Board(BOARD_SIZE);
     let snake = new Snake(SNAKE_INITIAL_POSITION, BOARD_SIZE);
@@ -18,6 +18,7 @@
     let eatSound;
     let deadSound;
     let isGameRunning = false;
+    let gamePaused = false;
 
     /**
      * @param {{ key: string; }} event
@@ -48,15 +49,17 @@
     }
 
     function pauseGame() {
+        gamePaused = true;
         isGameRunning ? stopGame() : startGame();
     }
 
     function startGame() {
         if (snake.isAlive) {
+            gamePaused = false;
             isGameRunning = true;
             timer = setInterval(function () {
                 runGame();
-            }, CURRENT_SPEED);
+            }, currentSpeed);
         }
     }
 
@@ -74,6 +77,7 @@
         snake.move(board.foodPos);
 
         if (!snake.isAlive) {
+            snake = snake;
             deadSound.play();
             redrawBoard();
             stopGame();
@@ -92,7 +96,7 @@
         clearInterval(timer);
         timer = setInterval(function () {
             runGame();
-        }, CURRENT_SPEED);
+        }, currentSpeed);
     }
 
     onMount(async () => {
@@ -109,7 +113,19 @@
 
 <main>
     <h1>Lange Schlange</h1>
-    <div class="board" style="--board-size: {BOARD_SIZE};">
+    {#if !snake.isAlive}
+        <div id="popup" class="overlay">
+            <h2>GAME OVER</h2>
+            <span>press ESC to restart</span>
+        </div>
+    {/if}
+    {#if gamePaused}
+        <div id="paused" class="overlay">
+            <h2>PAUSE</h2>
+            <span>press SPACE to continue</span>
+        </div>
+    {/if}
+    <div id="board" class={!snake.isAlive ? "blured" : ""} style="--board-size: {BOARD_SIZE}">
         {#each board.grid as row}
             {#each row as cell}
                 <div class="cell">
@@ -125,7 +141,34 @@
 <audio src="src/assets/sounds/dead.mp3" bind:this={deadSound}></audio>
 
 <style>
-    .board {
+    .overlay {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(40vmin, 400px);
+        height: min(20vmin, 200px);
+        place-content: center;
+        z-index: 1;
+        border-radius: 2vmin;
+    }
+
+    #popup {
+        background: #000000c5;
+        color: #ffffffaf;
+        border: 1vmin solid #00ff00;
+    }
+
+    #paused {
+        background: #00000074;
+        color: #ffffffaf;
+    }
+
+    .blured {
+        filter: blur(5px);
+    }
+
+    #board {
         display: grid;
         grid-template-columns: repeat(var(--board-size), 1fr);
         grid-template-rows: repeat(var(--board-size), 1fr);
@@ -133,6 +176,7 @@
         width: min(80vmin, 800px);
         height: min(80vmin, 800px);
         border: 1vmin solid #00ff00;
+        border-radius: 1vmin;
     }
 
     .cell {
