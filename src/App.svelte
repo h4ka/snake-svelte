@@ -39,7 +39,7 @@
             return;
         }
 
-        if (!isGameRunning) {
+        if (!isGameRunning && !gamePaused) {
             startGame();
         }
     }
@@ -50,13 +50,17 @@
     }
 
     function pauseGame() {
-        gamePaused = true;
-        isGameRunning ? stopGame() : startGame();
+        if (isGameRunning) {
+            gamePaused = true;
+            stopGame();
+        } else if (gamePaused) {
+            gamePaused = false;
+            startGame();
+        }
     }
 
     function startGame() {
         if (snake.isAlive) {
-            gamePaused = false;
             isGameRunning = true;
             timer = setInterval(function () {
                 runGame();
