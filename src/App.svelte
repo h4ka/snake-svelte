@@ -100,15 +100,7 @@
         {#each board.grid as row}
             {#each row as cell}
                 <div class="cell">
-                    {#if !snake.isAlive && (cell === "snake-head" || cell === "snake-body")}
-                        <div class="snake item">💀</div>
-                    {:else if cell === "snake-head"}
-                        <div class="snake item">👀</div>
-                    {:else if cell === "snake-body"}
-                        <div class="snake item"></div>
-                    {:else if cell === "food"}
-                        <div class="item">🍎</div>
-                    {/if}
+                    <div class="item {cell}"></div>
                 </div>
             {/each}
         {/each}
@@ -131,20 +123,28 @@
     }
 
     .cell {
-        padding: 1px;
         background-color: #9d9d9d;
+        padding: 1px;
     }
 
     .item {
         font-size: calc(30vmin / var(--board-size));
         height: 100%;
         width: 100%;
-        align-content: center;
+        border-radius: 50%;
     }
 
-    .snake {
-        background-color: #007500;
-        border-radius: 20%;
+    .snake-head {
+        background-color: #009000;
+        border-radius: 30%;
+    }
+
+    .snake-body {
+        background-color: #009000;
+    }
+
+    .food {
+        background-color: #ff0000cc;
     }
 
     h1 {
