@@ -23,7 +23,9 @@
      * @param {{ key: string; }} event
      */
     function onKeyDown(event) {
-        startGame();
+        if (!isGameRunning) {
+            startGame();
+        }
 
         if (event.key === "ArrowLeft") {
             snake.nextDirection = "left";
@@ -34,13 +36,23 @@
         } else if (event.key === "ArrowDown") {
             snake.nextDirection = "down";
         } else if (event.key === "Escape") {
-            terminateGame();
-            location.reload();
+            restartGame();
+        } else if (event.key === " ") {
+            pauseGame();
         }
     }
 
+    function restartGame() {
+        clearInterval(timer);
+        location.reload();
+    }
+
+    function pauseGame() {
+        isGameRunning ? stopGame() : startGame();
+    }
+
     function startGame() {
-        if (!isGameRunning) {
+        if (snake.isAlive) {
             isGameRunning = true;
             timer = setInterval(function () {
                 runGame();
@@ -48,7 +60,8 @@
         }
     }
 
-    function terminateGame() {
+    function stopGame() {
+        isGameRunning = false;
         clearInterval(timer);
     }
 
@@ -62,8 +75,8 @@
 
         if (!snake.isAlive) {
             deadSound.play();
-            snake = snake;
-            terminateGame();
+            redrawBoard();
+            stopGame();
         } else if (snake.ate) {
             eatSound.play();
             snake.ate = false;
@@ -90,7 +103,7 @@
     });
 
     onDestroy(() => {
-        terminateGame();
+        clearInterval(timer);
     });
 </script>
 
@@ -141,6 +154,10 @@
 
     .snake-body {
         background-color: #009000;
+    }
+
+    .snake-dead {
+        background-color: #303030;
     }
 
     .food {

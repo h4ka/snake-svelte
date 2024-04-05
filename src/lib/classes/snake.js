@@ -56,6 +56,7 @@ export default class Snake {
         // check if next move is out of bounds and set isAlive to false
         if (nextMove.x < 0 || nextMove.x === this.boardSize || nextMove.y < 0 || nextMove.y === this.boardSize) {
             this.isAlive = false;
+            return;
         }
 
         return nextMove;
@@ -67,6 +68,8 @@ export default class Snake {
     move(food) {
         // calculate next move
         let nextMove = this.calcNextMove();
+
+        if (!this.isAlive) return;
 
         // check if ate food and add new link to snake
         if (food.x === nextMove.x && food.y === nextMove.y) {
