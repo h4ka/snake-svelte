@@ -137,8 +137,8 @@
     <h2>Score: {snake.body.length}</h2>
 </main>
 <svelte:window on:keydown|preventDefault={onKeyDown} />
-<audio src="src/assets/sounds/eat.mp3" bind:this={eatSound}></audio>
-<audio src="src/assets/sounds/dead.mp3" bind:this={deadSound}></audio>
+<audio src="/sounds/eat.mp3" bind:this={eatSound}></audio>
+<audio src="/sounds/dead.mp3" bind:this={deadSound}></audio>
 
 <style>
     main {
