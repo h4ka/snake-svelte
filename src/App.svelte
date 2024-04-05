@@ -112,7 +112,7 @@
 </script>
 
 <main>
-    <h1>Lange Schlange</h1>
+    <h1>LANGE SCHLANGE</h1>
     {#if !snake.isAlive}
         <div id="popup" class="overlay">
             <h2>GAME OVER</h2>
@@ -134,13 +134,16 @@
             {/each}
         {/each}
     </div>
-    <h1>Score: {snake.body.length}</h1>
+    <h2>SCORE: {snake.body.length}</h2>
 </main>
 <svelte:window on:keydown|preventDefault={onKeyDown} />
 <audio src="src/assets/sounds/eat.mp3" bind:this={eatSound}></audio>
 <audio src="src/assets/sounds/dead.mp3" bind:this={deadSound}></audio>
 
 <style>
+    main {
+        color: #00ff00;
+    }
     .overlay {
         position: fixed;
         top: 50%;
@@ -173,8 +176,8 @@
         grid-template-columns: repeat(var(--board-size), 1fr);
         grid-template-rows: repeat(var(--board-size), 1fr);
         grid-gap: 1px;
-        width: min(80vmin, 800px);
-        height: min(80vmin, 800px);
+        width: min(70vmin, 500px);
+        height: min(70vmin, 500px);
         border: 1vmin solid #00ff00;
         border-radius: 1vmin;
     }
@@ -209,9 +212,8 @@
     }
 
     h1 {
-        color: #00ff00;
-        font-size: min(8vmin, 60px);
-        padding: 20px;
+        font-size: min(6vmin, 50px);
+        padding: 2vmax;
         margin: 0px;
     }
 </style>
