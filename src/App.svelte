@@ -60,7 +60,7 @@
     }
 
     function startGame() {
-        if (snake.isAlive) {
+        if (!snake.isDead) {
             isGameRunning = true;
             timer = setInterval(function () {
                 runGame();
@@ -81,7 +81,7 @@
     function runGame() {
         snake.move(board.foodPos);
 
-        if (!snake.isAlive) {
+        if (snake.isDead) {
             snake = snake;
             deadSound.play();
             redrawBoard();
@@ -118,19 +118,19 @@
 
 <main>
     <h1>Lange Schlange</h1>
-    {#if !snake.isAlive}
+    {#if snake.isDead}
         <div class="overlay">
             <h2>GAME OVER</h2>
             <span>press ESC to restart</span>
         </div>
     {/if}
-    {#if gamePaused && snake.isAlive}
+    {#if gamePaused && !snake.isDead}
         <div class="overlay">
             <h2>PAUSE</h2>
             <span>press SPACE to continue</span>
         </div>
     {/if}
-    <div id="board" class={!snake.isAlive ? "blured" : ""} style="--board-size: {BOARD_SIZE}">
+    <div id="board" class={snake.isDead ? "blured" : ""} style="--board-size: {BOARD_SIZE}">
         {#each board.grid as row}
             {#each row as cell}
                 <div class="cell">

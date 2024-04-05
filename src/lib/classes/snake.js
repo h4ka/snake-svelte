@@ -7,7 +7,7 @@ export default class Snake {
      */
     body = [];
     ate = false;
-    isAlive = true;
+    isDead = false;
     direction = "";
     nextDirection = "";
 
@@ -55,7 +55,7 @@ export default class Snake {
 
         // check if next move is out of bounds and set isAlive to false
         if (nextMove.x < 0 || nextMove.x === this.boardSize || nextMove.y < 0 || nextMove.y === this.boardSize) {
-            this.isAlive = false;
+            this.isDead = true;
             return;
         }
 
@@ -69,7 +69,7 @@ export default class Snake {
         // calculate next move
         let nextMove = this.calcNextMove();
 
-        if (!this.isAlive) return;
+        if (this.isDead) return;
 
         // check if ate food and add new link to snake
         if (food.x === nextMove.x && food.y === nextMove.y) {
@@ -85,7 +85,7 @@ export default class Snake {
             curr = new Coordinate(this.body[i].pos.x, this.body[i].pos.y);
             this.body[i].pos = prev;
             if (nextMove.x === this.body[i].pos.x && nextMove.y === this.body[i].pos.y) {
-                this.isAlive = false;
+                this.isDead = true;
             }
             prev = new Coordinate(curr.x, curr.y);
         }
