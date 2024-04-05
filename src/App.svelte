@@ -24,10 +24,6 @@
      * @param {{ key: string; }} event
      */
     function onKeyDown(event) {
-        if (!isGameRunning) {
-            startGame();
-        }
-
         if (event.key === "ArrowLeft") {
             snake.nextDirection = "left";
         } else if (event.key === "ArrowRight") {
@@ -40,6 +36,11 @@
             restartGame();
         } else if (event.key === " ") {
             pauseGame();
+            return;
+        }
+
+        if (!isGameRunning) {
+            startGame();
         }
     }
 
